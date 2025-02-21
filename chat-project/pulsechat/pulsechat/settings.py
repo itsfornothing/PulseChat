@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b608&rq6%(2buguhm3&k$zb+(u^v**=x%=!p^b67_lg49s9pt5'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your_default_secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -169,8 +169,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SOCIALACCOUNT_PROVIDERS = {
     'github': {
         'APP': {
-            'client_id': 'Ov23liSFIkosSuY7HaaB',
-            'secret': '671344a4549bd334d51ee5024b78e660a6851cc5',
+            'client_id': os.getenv("CLIENT_ID"),
+            'secret': os.getenv("SECRET"),
             'key': '',
         },
     }
