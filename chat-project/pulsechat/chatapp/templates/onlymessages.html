@@ -1,0 +1,88 @@
+{% load static %}
+
+{% if last_message %}
+<div id="chat_messages" hx-swap-oob="beforeend">
+    <div class="fade-in-up">
+        {% if last_message.last_message.sender == last_message.user %}
+        <li class="flex justify-end mb-3">
+            <div class="rounded-l-lg rounded-tr-lg p-4 max-w-[75%]" style="background-color: #27667B;">
+                <span style="color: white;">{{ last_message.last_message.text_content }}</span>
+            </div>
+            <div class="flex items-end">
+                <svg height="10" width="8">
+                    <path fill="#27667B" d="M6.3,10.4C1.5,8.7,0.9,5.5,0,0.2L0,13l5.2,0C7,13,9.6,11.5,6.3,10.4z" />
+                </svg>
+            </div>
+        </li>
+
+
+        {% else %}
+
+        <li>
+            <div class="flex justify-start">
+                <div class="flex items-end mr-2">
+                    <img class="w-8 h-8 rounded-full object-cover"
+                        src="{% static 'images/silver-membership-icon-default-avatar-profile-vector-54532901.jpg' %}">
+
+                </div>
+                <div class="flex items-end">
+                    <svg height="13" width="8">
+                        <path fill="#27667B" d="M2.8,13L8,13L8,0.2C7.1,5.5,6.5,8.7,1.7,10.4C-1.6,11.5,1,13,2.8,13z">
+                        </path>
+                    </svg>
+                </div>
+                <div class="p-4 max-w-[75%] rounded-r-lg rounded-tl-lg" style="background-color: #27667B;">
+                    <span style="color: white;">{{ last_message.last_message.text_content }}</span>
+                </div>
+            </div>
+            <div class="text-sm font-light py-1 ml-10">
+                <span class="text-white">{{ last_message.sender.full_name }}</span>
+                <span class="text-gray-370">@{{ last_message.last_message.sender.username }}</span>
+            </div>
+        </li>
+
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{% for message in messages %}
+<div class="fade-in-up">
+    {% if message.sender.email == user.email %}
+    <li class="flex justify-end mb-3">
+        <div class="rounded-l-lg rounded-tr-lg p-4 max-w-[75%] fade-in-up" style="background-color: #27667B;">
+            <span style="color: white;">{{ message.text_content }}</span>
+        </div>
+        <div class="flex items-end">
+            <svg height="10" width="8">
+                <path fill="#27667B" d="M6.3,10.4C1.5,8.7,0.9,5.5,0,0.2L0,13l5.2,0C7,13,9.6,11.5,6.3,10.4z" />
+            </svg>
+        </div>
+    </li>
+
+    {% else %}
+    <li>
+        <div class="flex justify-start">
+            <div class="flex items-end mr-2">
+                <img class="w-8 h-8 rounded-full object-cover"
+                    src="{% static 'images/silver-membership-icon-default-avatar-profile-vector-54532901.jpg' %}">
+
+            </div>
+            <div class="flex items-end">
+                <svg height="13" width="8">
+                    <path fill="#27667B" d="M2.8,13L8,13L8,0.2C7.1,5.5,6.5,8.7,1.7,10.4C-1.6,11.5,1,13,2.8,13z">
+                    </path>
+                </svg>
+            </div>
+            <div class="p-4 max-w-[75%] rounded-r-lg rounded-tl-lg fade-in-up" style="background-color: #27667B;">
+                <span style="color: white;">{{ message.text_content }}</span>
+            </div>
+        </div>
+        <div class="text-sm font-light py-1 ml-10">
+            <span class="text-white">{{ message.sender.full_name }}</span>
+            <span class="text-gray-370">@{{ message.sender.username }}</span>
+        </div>
+    </li>
+    {% endif %}
+</div>
+{% endfor %}

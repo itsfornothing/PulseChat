@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% load static %}
+{% block content %}
+
+<div class="d-flex flex-column py-2 flex-shrink-0 smallsidebar full-height-sidebar border-l border-r border-primary-subtle"
+    style="width: 260px; margin-left: 4.5rem; position: fixed;">
+    <form class="col-12 col-lg-auto mb-3 mb-lg-0 px-2" role="search">
+        <input type="search" class="form-control mb-3" placeholder="Search for chat" aria-label="Search" fill="#001F3F">
+    </form>
+
+    {% for group in all_groups %}
+    <form id="grpForm_{{group.name}}" action="{% url 'group_view' group.name %}" method="POST" class="m-0">
+        {% csrf_token %}
+        <div class="row g-0 py-2 d-flex align-items-center border-top border-bottom border-primary-subtle user-row"
+            onclick="document.getElementById('grpForm_{{group.name}}').submit()">
+            <div class="col-md-3">
+
+                <img src="{% static 'images/silver-membership-icon-default-avatar-profile-vector-54532901.jpg' %}"
+                    alt="mdo" width="50" height="50" class="rounded-circle mx-2">
+            </div>
+            <div class="col-md-8 d-flex flex-grow-1">
+                <div class="card-body">
+                    <h5 class="card-title">{{ group.name }}</h5>
+                    <p class="card-text text-success">Group</p>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% endfor %}
+
+    <div>
+        <form action="{% url 'create_group' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success fixed-bottom "
+                style="margin-bottom: 50px; margin-left: 8rem; width: 150px;">Create Group</button>
+        </form>
+
+        <form action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-warning fixed-bottom "
+                style="margin-bottom: 3px; margin-left: 8rem; width: 150px;">Log Out</button>
+        </form>
+    </div>
+</div>
+
+
+
+</main>
+` {% endblock content %}

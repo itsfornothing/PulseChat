@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+
+{% load static %}
+{% block content %}
+
+<div class="d-flex flex-column py-2 flex-shrink-0 smallsidebar full-height-sidebar border-l border-r border-primary-subtle"
+    style="width: 260px; margin-left: 4.5rem; position: fixed;">
+    <form class="col-12 col-lg-auto mb-3 mb-lg-0 px-2" role="search">
+        <input type="search" class="form-control mb-3" placeholder="Search for chat" aria-label="Search" fill="#001F3F">
+    </form>
+
+    {% for user in users %}
+    <form id="chatForm_{{user.email}}" action="{% url 'chatpage' user.id %}" method="POST" class="m-0">
+        {% csrf_token %}
+        <div class="row g-0 py-2 d-flex align-items-center border-top border-bottom border-primary-subtle user-row"
+            data-user-email="{{ user.email }}" onclick="document.getElementById('chatForm_{{user.email}}').submit()">
+            <div class="col-md-3">
+
+                <img src="{% static 'images/silver-membership-icon-default-avatar-profile-vector-54532901.jpg' %}"
+                    alt="mdo" width="50" height="50" class="rounded-circle mx-2">
+            </div>
+            <div class="col-md-8 d-flex flex-grow-1">
+                <div class="card-body">
+                    <h5 class="card-title">{{ user.full_name }}</h5>
+                    <p class="card-text text-secondary">@{{user.username}}</p>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% endfor %}
+
+    <div>
+        <form action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success fixed-bottom "
+                style="margin-bottom: 50px; margin-left: 8rem; width: 150px;">Create Group</button>
+        </form>
+
+        <form action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-warning fixed-bottom "
+                style="margin-bottom: 3px; margin-left: 8rem; width: 150px;">Log Out</button>
+        </form>
+    </div>
+</div>
+
+{% block content2 %}
+<div id="chat_window_container" class="d-flex flex-column flex-grow-1" style="margin-left: 332px;">
+    <div id="chat_window" class="d-flex flex-column h-100 rounded shadow">
+        <div class="text-center bg-primary text-white py-2 fixed-top" style="margin-left: 332px;">
+            <div id="online-icon"></div>
+            <span id="online-check" class="pr-1"></span> 
+        </div>
+        <div id="chat_container" class="flex-grow-1 overflow-auto px-3 pb-5 pt-3 mt-5 " style="height: 91vh;"
+            hx-on::after-swap="scrollToBottom()">
+            <ul id="chat_messages" class="list-unstyled">
+
+                {% include 'onlymessages.html'%}
+
+            </ul>
+        </div>
+        <div id="scrollableform" class="px-3 py-2 border-top border-primary-subtle fixed-bottom "
+            style="margin-left: 332px; margin-top: 10px; background-color: #6A9AB0;">
+            <form id="chat_message_form" class="d-flex" 
+                hx-ext="ws"
+                ws-connect="/ws/chat/{{ freind_email }}"
+                ws-send
+                _="on htmx:wsAfterSend reset() me">
+
+                {% csrf_token %}
+
+                <input type="text" name="text_content" class="form-control me-2" placeholder="Type a message..."
+                    style="width: 1200px" required>
+
+                <button type="submit" class="btn btn-primary mt-1 mx-2 px-3">Send</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+</main>
+
+` {% endblock content %}
+
+
+{% block javascript %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        scrollToBottom();
+    });
+
+    const chatMessages = document.getElementById('chat_messages');
+    const observer = new MutationObserver(function (mutations) {
+        scrollToBottom();
+    });
+
+    observer.observe(chatMessages, { childList: true });
+
+    function scrollToBottom() {
+        const chatContainer = document.getElementById('chat_container');
+        if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    }
+</script>
+{% endblock %}
